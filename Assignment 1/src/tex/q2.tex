@@ -1,0 +1,75 @@
+\question[10pt]
+
+Assume the probability of a certain disease is \textbf{0.01}. The probability of test positive given thata person is infected with the disease is \textbf{0.95} and the probability of test positive given theperson is not infected with the disease is \textbf{0.05}.
+
+\begin{parts}
+    \part Calculate the probability of test positive.
+    \part Use Bayes’ Rule to calculate the probability of being infected with the disease given that the test is positive.
+    \droppoints
+\end{parts}
+
+\begin{solution}
+
+    Let:
+    \[
+        P(D)=0.01, \quad P(\neg D)=0.99,
+    \]
+    \[
+        P(+|D)=0.95, \quad P(+|\neg D)=0.05,
+    \]
+    where:
+    \begin{itemize}
+        \item $D$ = event that a person \emph{has} the disease,
+        \item $\neg D$ = event that a person \emph{does not have} the disease,
+        \item $(+)$ = event that the test result is \emph{positive}.
+    \end{itemize}
+
+    \hrule
+
+    \begin{parts}
+
+        \part Probability of testing positive.
+
+        We apply the \textbf{law of total probability}:
+        \[
+            P(+)=P(+|D)P(D)+P(+|\neg D)P(\neg D).
+        \]
+
+        Substitute the given values:
+        \[
+            P(+)= (0.95)(0.01) + (0.05)(0.99).
+        \]
+
+        Compute step-by-step:
+        \[
+            P(+)= 0.0095 + 0.0495 = 0.059.
+        \]
+
+        \[
+            \boxed{P(+)=0.059.}
+        \]
+
+        \hrule
+
+        \part Probability of being infected given that the test is positive.
+
+        We apply \textbf{Bayes' Rule}:
+        \[
+            P(D|+)=\frac{P(+|D)P(D)}{P(+)}.
+        \]
+
+        Substitute known quantities:
+        \[
+            P(D|+)=\frac{(0.95)(0.01)}{0.059}.
+        \]
+
+        Calculate:
+        \[
+            P(D|+)=\frac{0.0095}{0.059}\approx0.161.
+        \]
+
+        \[
+            \boxed{P(D|+)\approx0.161.}
+        \]
+    \end{parts}
+\end{solution}

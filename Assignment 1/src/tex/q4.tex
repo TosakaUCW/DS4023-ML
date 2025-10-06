@@ -1,0 +1,91 @@
+\question[20pt]
+
+Consider the Ridge Regression estimator
+\[
+    \arg\min_{\mathbf{w}} \; \| X \mathbf{w} - \mathbf{y} \|_2^2 + \lambda \| \mathbf{w} \|_2^2
+\]
+(Hint: here $X$ is the feature matrix, equivalent to $X^\top$ in our slides.)
+
+We know this is solved by
+\[
+    \mathbf{\hat w} = (X^\top X + \lambda I)^{-1} X^\top \mathbf{y}.
+\]
+
+One interpretation of Ridge Regression is to find the \textbf{Maximum A Posteriori (MAP)} estimate
+on $\mathbf{w}$, the parameters, assuming that the prior of $\mathbf{w}$ is
+\[
+    \mathbf{w} \sim \mathcal{N}(0, I)
+\]
+and that the random variable $\mathbf{Y}$ is generated using
+\[
+    \mathbf{Y} = X \mathbf{w} + \sqrt{\lambda} \, \mathbf{N},
+\]
+where each entry of the vector $\mathbf{N}$ is zero-mean, unit-variance normal.
+
+\medskip
+
+Show that
+\[
+    \mathbf{\hat w} = (X^\top X + \lambda I)^{-1} X^\top \mathbf{y}
+\]
+is indeed the MAP estimate for $\mathbf{w}$ given an observation on $\mathbf{Y} = \mathbf{y}$.
+
+\droppoints
+
+\begin{solution}
+    \paragraph{Posterior up to a constant.}
+    By Bayes' rule,
+    \[
+        p(\mathbf{w}\mid \mathbf{y}) \;\propto\; p(\mathbf{y}\mid \mathbf{w})\,p(\mathbf{w}).
+    \]
+    Using the Gaussian forms,
+    \[
+        p(\mathbf{y}\mid \mathbf{w}) \propto \exp\!\left(-\frac{1}{2\lambda}\,\|\mathbf{y}-X\mathbf{w}\|_2^2\right),\qquad
+        p(\mathbf{w}) \propto \exp\!\left(-\frac{1}{2}\,\|\mathbf{w}\|_2^2\right).
+    \]
+    Hence
+    \[
+        p(\mathbf{w}\mid \mathbf{y}) \propto
+        \exp\!\left(
+        -\frac{1}{2\lambda}\,\|\mathbf{y}-X\mathbf{w}\|_2^2
+        -\frac{1}{2}\,\|\mathbf{w}\|_2^2
+        \right).
+    \]
+
+    \paragraph{MAP as a minimizer.}
+    Maximizing the posterior is equivalent to minimizing the negative log-posterior:
+    \[
+        \hat{\mathbf{w}}
+        = \arg\min_{\mathbf{w}}
+        \left\{
+        \frac{1}{2\lambda}\,\|\mathbf{y}-X\mathbf{w}\|_2^2
+        +\frac{1}{2}\,\|\mathbf{w}\|_2^2
+        \right\}.
+    \]
+    Multiplying the objective by the positive constant $2\lambda$ leaves the minimizer unchanged:
+    \[
+        \hat{\mathbf{w}}
+        = \arg\min_{\mathbf{w}}
+        \big\{\,
+        \|\mathbf{y}-X\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_2^2
+        \,\big\},
+    \]
+    which is exactly the ridge regression objective.
+
+    \paragraph{Normal equations and closed form.}
+    Differentiate and set to zero:
+    \[
+        \nabla_{\mathbf{w}}
+        \big(\|\mathbf{y}-X\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_2^2\big)
+        = -2X^\top(\mathbf{y}-X\mathbf{w}) + 2\lambda \mathbf{w}
+        = \mathbf{0}.
+    \]
+    Rearrange:
+    \[
+        (X^\top X+\lambda I)\,\mathbf{w}=X^\top \mathbf{y}.
+    \]
+    Since $X^\top X+\lambda I$ is positive definite for $\lambda>0$, it is invertible, giving the unique solution
+    \[
+        \boxed{\ \hat{\mathbf{w}}=(X^\top X+\lambda I)^{-1}X^\top \mathbf{y}\ }.
+    \]
+\end{solution}
