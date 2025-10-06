@@ -1,0 +1,145 @@
+\question[15pt]
+
+Let $\mathbf{x}, \mathbf{c} \in \mathbb{R}^n$ and $\mathbf{A} \in \mathbb{R}^{n \times n}$.
+For the following parts, before taking any derivatives, identify what the derivative looks like
+(is it a scalar, vector, or matrix?) and how we calculate each term in the derivative.
+Then carefully solve for an arbitrary entry of the derivative, then stack/arrange all of them to get the final result.
+
+Note that the convention we will use going forward is that vector derivatives of a scalar (with respect to a column vector)
+are expressed as a \textbf{row vector}, i.e.
+\[
+    \frac{\partial f}{\partial \mathbf{x}}
+    = \left(
+    \frac{\partial f}{\partial x_1},
+    \frac{\partial f}{\partial x_2},
+    \cdots,
+    \frac{\partial f}{\partial x_n}
+    \right),
+\]
+since a row acting on a column gives a scalar. You may have seen alternative conventions before,
+but the important thing is that you need to understand the types of objects and how they map to the shapes
+of the multidimensional arrays we use to represent those types.
+
+\begin{parts}
+    \part Show that
+    \[
+        \frac{\partial}{\partial \mathbf{x}} (\mathbf{x}^\top \mathbf{c}) = \mathbf{c}^\top
+    \]
+
+    \part Show that
+    \[
+        \frac{\partial}{\partial \mathbf{x}} \|\mathbf{x}\|_2^2 = 2\mathbf{x}^\top
+    \]
+
+    \part Show that
+    \[
+        \frac{\partial}{\partial \mathbf{x}} (\mathbf{A}\mathbf{x}) = \mathbf{A}
+    \]
+
+    \part Show that
+    \[
+        \frac{\partial}{\partial \mathbf{x}} (\mathbf{x}^\top \mathbf{A} \mathbf{x})
+        = \mathbf{x}^\top (\mathbf{A} + \mathbf{A}^\top)
+    \]
+
+    \part Under what condition is the previous derivative equal to $2\mathbf{x}^\top \mathbf{A}$?
+    \droppoints
+\end{parts}
+
+\begin{solution}
+    \begin{parts}
+        \part Show $\dfrac{\partial}{\partial x}\,(x^\top c)=c^\top$.
+
+        \textbf{Type/shape.} $x^\top c$ is a scalar; its derivative w.r.t.\ $x\in\mathbb{R}^n$ is a $1\times n$ row vector.
+
+        \textbf{Arbitrary entry.} Write $x^\top c=\sum_{i=1}^n x_i c_i$. Then for $j\in\{1,\dots,n\}$,
+        \[
+            \frac{\partial}{\partial x_j}\,(x^\top c)
+            =\sum_{i=1}^n c_i\,\frac{\partial x_i}{\partial x_j}
+            =\sum_{i=1}^n c_i\,\delta_{ij}
+            =c_j.
+        \]
+
+        \textbf{Stacking.} Collecting entries $j=1,\dots,n$ into a row,
+        \[
+            \frac{\partial}{\partial x}\,(x^\top c)=\big[c_1,\dots,c_n\big]=c^\top.
+        \]
+
+        \hrule
+
+        \part Show $\dfrac{\partial}{\partial x}\,\|x\|_2^2=2x^\top$.
+
+        \textbf{Type/shape.} $\|x\|_2^2=x^\top x$ is a scalar; derivative is a $1\times n$ row vector.
+
+        \textbf{Arbitrary entry.} $x^\top x=\sum_{i=1}^n x_i^2$. Then
+        \[
+            \frac{\partial}{\partial x_j}\,(x^\top x)=2x_j.
+        \]
+
+        \textbf{Stacking.} Hence
+        \[
+            \frac{\partial}{\partial x}\,\|x\|_2^2
+            =\big[2x_1,\dots,2x_n\big]
+            =2x^\top.
+        \]
+
+        \hrule
+
+        \part Show $\dfrac{\partial}{\partial x}\,(Ax)=A$.
+
+        Here we may allow $A\in\mathbb{R}^{n\times n}$ and $x\in\mathbb{R}^n$, so $Ax\in\mathbb{R}^n$.
+
+        \textbf{Type/shape.} The derivative of a vector-valued function $Ax$ w.r.t.\ $x\in\mathbb{R}^n$ is its Jacobian, an $n\times n$ matrix.
+
+        \textbf{Arbitrary entry.} The $i$-th component of $Ax$ is $(Ax)_i=\sum_{k=1}^n A_{ik}x_k$. Then for $j\in\{1,\dots,n\}$,
+        \[
+            \frac{\partial (Ax)_i}{\partial x_j}
+            =\sum_{k=1}^n A_{ik}\,\frac{\partial x_k}{\partial x_j}
+            =\sum_{k=1}^n A_{ik}\,\delta_{kj}
+            =A_{ij}.
+        \]
+
+        \textbf{Stacking.} The Jacobian has entries $J_{ij}=A_{ij}$, so
+        \[
+            \frac{\partial}{\partial x}\,(Ax)=A.
+        \]
+
+        \hrule
+
+        \part Show $\dfrac{\partial}{\partial x}\,(x^\top A x)=x^\top(A+A^\top)$.
+
+        \textbf{Type/shape.} $x^\top A x$ is a scalar; derivative is a $1\times n$ row vector.
+
+        \textbf{Arbitrary entry.} Expand $x^\top A x=\sum_{i=1}^n\sum_{k=1}^n x_i A_{ik} x_k$. For a fixed $j$,
+        \[
+            \frac{\partial}{\partial x_j}\,(x^\top A x)
+            =\sum_{i,k} \frac{\partial}{\partial x_j}\big(x_i A_{ik} x_k\big)
+            =\sum_{i,k}\Big(\delta_{ij} A_{ik} x_k + x_i A_{ik}\,\delta_{kj}\Big).
+        \]
+        Evaluate the sums:
+        \[
+            \sum_{i,k}\delta_{ij} A_{ik} x_k=\sum_{k} A_{jk}x_k=(Ax)_j,\qquad
+            \sum_{i,k}x_i A_{ik}\delta_{kj}=\sum_{i} x_i A_{ij}=(A^\top x)_j.
+        \]
+        Hence
+        \[
+            \frac{\partial}{\partial x_j}\,(x^\top A x)=(Ax)_j+(A^\top x)_j=\big((A+A^\top)x\big)_j.
+        \]
+
+        \textbf{Stacking.} Using the row-gradient convention,
+        \[
+            \frac{\partial}{\partial x}\,(x^\top A x)
+            =\big((A+A^\top)x\big)^\top
+            =x^\top(A+A^\top).
+        \]
+
+        \hrule
+
+        \part When is the previous derivative equal to $2x^\top A$?
+
+        We have $\dfrac{\partial}{\partial x}(x^\top A x)=x^\top(A+A^\top)$. This equals $2x^\top A$ for all $x$ if and only if $A+A^\top=2A$, i.e.,
+        \[
+            A=A^\top \quad\text{(}\,A\text{ symmetric)\,.}
+        \]
+    \end{parts}
+\end{solution}

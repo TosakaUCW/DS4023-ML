@@ -1,0 +1,162 @@
+\question[20pt]
+
+Gradient descent is the primary algorithm to search optimal parameters for our models.
+Typically, we want to solve optimization problems stated as
+\[
+    \min_{\bm{\theta} \in \mathbb{R}^d} \; \mathcal{L}(f_{\bm{\theta}}, \mathcal{D})
+\]
+where $\mathcal{L}$ are differentiable functions.
+
+In this example, we look at a simple supervised learning problem where, given a dataset
+\[
+    \mathcal{D} = \{(x_i, y_i)\}_{i=1}^N,
+\]
+we want to find the optimal parameters $\theta$ that minimize some loss.
+We consider different models for learning the mapping from input to output,
+and examine the behavior of gradient descent for each model.
+
+
+\begin{parts}
+
+
+    \part
+
+    The simplest parametric model entails learning a single-parameter constant function,
+    where we set
+    \[
+        \hat{y}_i = \theta.
+    \]
+    We wish to find
+    \[
+        \theta^\star = \arg\min_{\theta \in \mathbb{R}} \; \mathcal{L}(f_\theta, \mathcal{D})
+        = \arg\min_{\theta \in \mathbb{R}} \frac{1}{N} \sum_{i=1}^N (y_i - \theta)^2.
+    \]
+
+    \begin{enumerate}
+        \item[(i)] What is the gradient of $\mathcal{L}$ with respect to $\theta$?
+        \item[(ii)] What is the optimal value of $\theta$?
+        \item[(iii)] Write the gradient descent update.
+        \item[(iv)] Stochastic Gradient Descent (SGD) is an alternative optimization algorithm,
+              where instead of using all $N$ samples, we use a single sample per optimization step
+              to update the model. What is the contribution of each data-point to the full gradient update?
+    \end{enumerate}
+
+    \part
+
+    Instead of constant functions, we now consider a single-parameter linear model
+    \[
+        \hat{y}_i(x_i) = \theta x_i
+    \]
+    where we search for $\theta$ such that
+    \[
+        \theta^\star = \arg\min_{\theta \in \mathbb{R}} \; \frac{1}{N} \sum_{i=1}^N (y_i - \theta x_i)^2.
+    \]
+
+    \begin{enumerate}
+        \item[(i)] What is the gradient of $\mathcal{L}$ with respect to $\theta$?
+        \item[(ii)] What is the optimal value of $\theta$?
+        \item[(iii)] Write the gradient descent update.
+        \item[(iv)] Do all points get the same vote in the update? Why or why not?
+    \end{enumerate}
+
+\end{parts}
+
+\droppoints
+
+\begin{solution}
+    \begin{parts}
+
+        \part Constant model $\hat y_i=\theta$
+
+        Loss:
+        \[
+            \mathcal{L}(\theta)=\frac{1}{N}\sum_{i=1}^N (y_i-\theta)^2.
+        \]
+
+        \begin{enumerate}
+            \item \textbf{Gradient $\partial \mathcal{L}/\partial \theta$.}
+                  \[
+                      \frac{\partial \mathcal{L}}{\partial \theta}
+                      =\frac{1}{N}\sum_{i=1}^N 2(\theta-y_i)
+                      =\frac{2}{N}\Big(N\theta-\sum_{i=1}^N y_i\Big)
+                      =2\Big(\theta-\bar y\Big),
+                  \]
+                  where $\displaystyle \bar y=\frac{1}{N}\sum_{i=1}^N y_i$.
+
+            \item \textbf{Optimal $\theta^\star$.}
+                  Set the gradient to zero:
+                  \[
+                      2(\theta^\star-\bar y)=0 \;\;\Longrightarrow\;\; \boxed{\ \theta^\star=\bar y\ }.
+                  \]
+
+            \item \textbf{Gradient descent (GD) update.}
+                  For learning rate $\eta>0$,
+                  \[
+                      \boxed{\ \theta_{t+1}=\theta_t-\eta\,\frac{\partial \mathcal{L}}{\partial \theta}(\theta_t)
+                          =\theta_t-2\eta\big(\theta_t-\bar y\big)\ }.
+                  \]
+                  Equivalently,
+                  $\theta_{t+1}=(1-2\eta)\theta_t+2\eta\,\bar y$ (a contraction toward the sample mean when $0<\eta<1$).
+
+            \item \textbf{Per-sample contribution to the full gradient \& SGD.}
+                  The full gradient decomposes as
+                  \[
+                      \frac{\partial \mathcal{L}}{\partial \theta}
+                      =\frac{1}{N}\sum_{i=1}^N \underbrace{2(\theta-y_i)}_{\text{per-sample term}}.
+                  \]
+                  Thus the contribution of data point $i$ to the \emph{full} gradient is
+                  \[
+                      \boxed{\ \frac{2}{N}(\theta-y_i)\ }.
+                  \]
+                  In SGD with a single sampled index $i_t$, the stochastic gradient is $2(\theta-y_{i_t})$, yielding the SGD step
+                  $\ \theta_{t+1}=\theta_t-2\eta\,(\theta_t-y_{i_t})$.
+        \end{enumerate}
+
+        \hrule
+
+        \part One-parameter linear model $\hat y_i=\theta x_i$
+
+        Loss:
+        \[
+            \mathcal{L}(\theta)=\frac{1}{N}\sum_{i=1}^N (y_i-\theta x_i)^2.
+        \]
+
+        \begin{enumerate}
+            \item \textbf{Gradient $\partial \mathcal{L}/\partial \theta$.}
+                  By the chain rule,
+                  \[
+                      \frac{\partial \mathcal{L}}{\partial \theta}
+                      =\frac{1}{N}\sum_{i=1}^N 2(\theta x_i-y_i)\,x_i
+                      =\frac{2}{N}\sum_{i=1}^N x_i(\theta x_i-y_i).
+                  \]
+
+            \item \textbf{Optimal $\theta^\star$.}
+                  Set the gradient to zero:
+                  \[
+                      \sum_{i=1}^N x_i(\theta^\star x_i-y_i)=0
+                      \;\Longrightarrow\;
+                      \theta^\star \sum_{i=1}^N x_i^2=\sum_{i=1}^N x_i y_i
+                      \;\Longrightarrow\;
+                      \boxed{\ \displaystyle \theta^\star=\frac{\sum_{i=1}^N x_i y_i}{\sum_{i=1}^N x_i^2}\ }.
+                  \]
+                  (Assumes not all $x_i=0$, so $\sum x_i^2>0$.)
+
+            \item \textbf{Gradient descent (GD) update.}
+                  \[
+                      \boxed{\ \theta_{t+1}
+                          =\theta_t-\eta\,\frac{\partial \mathcal{L}}{\partial \theta}(\theta_t)
+                          =\theta_t-\eta\,\frac{2}{N}\sum_{i=1}^N x_i\big(\theta_t x_i-y_i\big)\ }.
+                  \]
+                  In SGD with a single index $i_t$:
+                  $\ \theta_{t+1}=\theta_t-2\eta\,x_{i_t}(\theta_t x_{i_t}-y_{i_t})$.
+
+            \item \textbf{Do all points get the same vote? Why/why not?}
+
+                  No. The per-point contribution to the \emph{full} gradient is
+                  \[
+                      \boxed{\ \frac{2}{N}\,x_i(\theta x_i-y_i)\ }.
+                  \]
+                  Its magnitude scales with $|x_i|$ (and with the residual $|\theta x_i-y_i|$). Points with larger $|x_i|$ exert larger leverage on the update; points with $x_i=0$ contribute nothing. The sign is determined by the product $x_i(\theta x_i-y_i)$, pushing $\theta$ to reduce the residual on that sample.
+        \end{enumerate}
+    \end{parts}
+\end{solution}
