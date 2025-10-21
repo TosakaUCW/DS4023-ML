@@ -1,0 +1,94 @@
+\section*{Question 4}
+% \section*{Question 4: Gaussian (Na\"ive) Bayes and Logistic Regression}
+
+Let $Y\in\{0,1\}$ with prior $\pi=P(Y=1)$, and $\mathbf{X}=(X_1,\dots,X_n)$ with
+conditional independence given $Y$ (na\"ive Bayes). For each feature $i$ and class $k\in\{0,1\}$,
+assume a univariate Gaussian:
+\[
+    P(X_i\mid Y=k)=\mathcal{N}(\mu_{i,k},\,\sigma_{i,k}^2),\qquad i=1,\dots,n.
+\]
+Hence
+\[
+    p(\mathbf{x}\mid Y=k)=\prod_{i=1}^n \frac{1}{\sqrt{2\pi}\,\sigma_{i,k}}
+    \exp\!\left(-\frac{(x_i-\mu_{i,k})^2}{2\sigma_{i,k}^2}\right).
+\]
+By Bayes' rule,
+\[
+    P(Y=1\mid\mathbf{x})
+    =\frac{\pi\,p(\mathbf{x}\mid Y=1)}{\pi\,p(\mathbf{x}\mid Y=1)+(1-\pi)\,p(\mathbf{x}\mid Y=0)}.
+\]
+log-odds:
+\[
+    \Lambda(\mathbf{x})
+    :=\log\frac{P(Y=1\mid\mathbf{x})}{P(Y=0\mid\mathbf{x})}
+    =\log\frac{\pi}{1-\pi}
+    +\log\frac{p(\mathbf{x}\mid Y=1)}{p(\mathbf{x}\mid Y=0)}.
+\]
+
+\subsection*{(a) $\sigma_{i,0}=\sigma_{i,1}=\sigma_i$}
+Under the special assumption used in class/readings, each feature has a class-independent
+standard deviation $\sigma_i>0$. Then
+\[
+    \log\frac{p(\mathbf{x}\mid Y=1)}{p(\mathbf{x}\mid Y=0)}
+    =\sum_{i=1}^n\left[
+        -\frac{(x_i-\mu_{i,1})^2}{2\sigma_i^2}
+        +\frac{(x_i-\mu_{i,0})^2}{2\sigma_i^2}
+        \right]
+    =\sum_{i=1}^n\frac{1}{2\sigma_i^2}\Big((x_i^2-2x_i\mu_{i,1}+\mu_{i,1}^2)-(x_i^2-2x_i\mu_{i,0}+\mu_{i,0}^2)\Big).
+\]
+% The $x_i^2$ terms cancel, leaving a linear function of $x_i$:
+The $x_i^2$ terms cancel:
+\[
+    \log\frac{p(\mathbf{x}\mid Y=1)}{p(\mathbf{x}\mid Y=0)}
+    =\sum_{i=1}^n \left(\frac{\mu_{i,1}-\mu_{i,0}}{\sigma_i^2}\right)x_i
+    +\frac{1}{2}\sum_{i=1}^n\frac{\mu_{i,0}^2-\mu_{i,1}^2}{\sigma_i^2}.
+\]
+Therefore the log-odds is linear in $\mathbf{x}$:
+\[
+    \Lambda(\mathbf{x})
+    = w_0 + \sum_{i=1}^n w_i x_i,
+    \quad\text{with}\quad
+    w_i=\frac{\mu_{i,1}-\mu_{i,0}}{\sigma_i^2},\ \
+    w_0=\log\frac{\pi}{1-\pi}+\frac{1}{2}\sum_{i=1}^n\frac{\mu_{i,0}^2-\mu_{i,1}^2}{\sigma_i^2}.
+\]
+Applying the logistic link,
+\[
+    P(Y=1\mid\mathbf{x})=\frac{1}{1+\exp\!\big(-\Lambda(\mathbf{x})\big)}
+    =\sigma\!\left(w_0+\sum_{i=1}^n w_i x_i\right),
+\]
+which is \emph{exactly} the functional form of logistic regression. 
+% Hence, under the shared-variance na\"ive Bayes model, the discriminative posterior $P(Y\mid\mathbf{X})$ matches logistic regression.
+
+\subsection*{(b) $\sigma_{i,0}\neq\sigma_{i,1}$}
+% Now remove the constraint that $\sigma_{i,k}$ is class-independent. Then
+\[
+    \log\frac{p(\mathbf{x}\mid Y=1)}{p(\mathbf{x}\mid Y=0)}
+    =\sum_{i=1}^n\left[
+        \log\frac{\sigma_{i,0}}{\sigma_{i,1}}
+        -\frac{(x_i-\mu_{i,1})^2}{2\sigma_{i,1}^2}
+        +\frac{(x_i-\mu_{i,0})^2}{2\sigma_{i,0}^2}
+        \right].
+\]
+% Expanding the squares and collecting terms for each $i$:
+\[
+    -\frac{(x_i-\mu_{i,1})^2}{2\sigma_{i,1}^2}
+    +\frac{(x_i-\mu_{i,0})^2}{2\sigma_{i,0}^2}
+    =
+    \underbrace{\Big(\frac{1}{2\sigma_{i,0}^2}-\frac{1}{2\sigma_{i,1}^2}\Big)}_{\text{quadratic coeff.}}x_i^2
+    +\underbrace{\Big(\frac{\mu_{i,1}}{\sigma_{i,1}^2}-\frac{\mu_{i,0}}{\sigma_{i,0}^2}\Big)}_{\text{linear coeff.}}x_i
+    +\underbrace{\Big(\frac{\mu_{i,0}^2}{2\sigma_{i,0}^2}-\frac{\mu_{i,1}^2}{2\sigma_{i,1}^2}\Big)}_{\text{constant}}.
+\]
+% Thus the full log-odds becomes
+\[
+    \Lambda(\mathbf{x})
+    =\log\frac{\pi}{1-\pi}
+    +\sum_{i=1}^n \log\frac{\sigma_{i,0}}{\sigma_{i,1}}
+    +\sum_{i=1}^n\Big(\frac{1}{2\sigma_{i,0}^2}-\frac{1}{2\sigma_{i,1}^2}\Big)x_i^2
+    +\sum_{i=1}^n\Big(\frac{\mu_{i,1}}{\sigma_{i,1}^2}-\frac{\mu_{i,0}}{\sigma_{i,0}^2}\Big)x_i
+    +\sum_{i=1}^n\Big(\frac{\mu_{i,0}^2}{2\sigma_{i,0}^2}-\frac{\mu_{i,1}^2}{2\sigma_{i,1}^2}\Big).
+\]
+\subsection*{(c) conclusion} 
+
+unless $\sigma_{i,0}=\sigma_{i,1}$ for every $i$, the coefficients of $x_i^2$ do not cancel, so the log-odds is \emph{quadratic} in $\mathbf{x}$. 
+
+Hence the form is \boxed{\textbf{not}} the logistic regression form.

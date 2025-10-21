@@ -1,0 +1,96 @@
+\section*{Question 2}
+% \section*{Question 2: Source of Error (Part 1)}
+\[
+    y_i \sim \mathcal{N}(\mu, 1), \quad i = 1, 2, \dots, n.
+\]
+
+\subsection*{(a)}
+% \subsection*{(a) Estimator $\hat{\mu} = 1$}
+
+Since the estimator is constant,
+\[
+    \mathbb{E}[\hat{\mu}] = 1.
+\]
+Hence,
+\[
+    \text{Bias}(\hat{\mu}) = \mathbb{E}[\hat{\mu}] - \mu = 1 - \mu,
+    \qquad
+    \text{Var}(\hat{\mu}) = 0.
+\]
+Therefore, the mean squared error (MSE) is
+\[
+    \mathrm{MSE} = (1 - \mu)^2.
+\]
+\textbf{Interpretation:} This estimator ignores the data and is generally not good,
+except in the special case where the true mean $\mu = 1$.
+
+\subsection*{(b)}
+% \subsection*{(b) Estimator $\hat{\mu} = y_1$}
+
+Since $y_1 \sim \mathcal{N}(\mu, 1)$,
+\[
+    \mathbb{E}[\hat{\mu}] = \mu, \qquad \text{Var}(\hat{\mu}) = 1.
+\]
+Thus,
+\[
+    \text{Bias}(\hat{\mu}) = 0, \qquad \mathrm{MSE} = 1.
+\]
+\textbf{Interpretation:} This estimator is unbiased but has high variance,
+because it uses only one observation instead of all $n$ samples.
+
+\subsection*{(c)}
+% \subsection*{(c) Regularized (ridge) estimator}
+
+The estimator is defined as
+\[
+    \hat{\mu} = \arg\min_{\mu}
+    \sum_{i=1}^{n} (y_i - \mu)^2 + \lambda \mu^2,
+    \qquad \lambda > 0.
+\]
+Taking the derivative and setting it to zero:
+\[
+    -2\sum_{i=1}^n (y_i - \mu) + 2\lambda \mu = 0
+    \quad \Rightarrow \quad
+    (n + \lambda)\hat{\mu} = \sum_{i=1}^n y_i.
+\]
+Hence,
+\[
+    \boxed{\hat{\mu} = \frac{n}{n + \lambda}\,\bar{y}},
+    \qquad
+    \bar{y} = \frac{1}{n}\sum_{i=1}^n y_i.
+\]
+
+\paragraph{Expectation:}
+\[
+    \mathbb{E}[\hat{\mu}] = \frac{n}{n+\lambda}\,\mathbb{E}[\bar{y}]
+    = \frac{n}{n+\lambda}\,\mu.
+\]
+
+\paragraph{Bias:}
+\[
+    \text{Bias}(\hat{\mu}) = \mathbb{E}[\hat{\mu}] - \mu
+    = \left(\frac{n}{n+\lambda} - 1\right)\mu
+    = -\frac{\lambda}{n+\lambda}\,\mu.
+\]
+
+\paragraph{Variance:}
+Since $\text{Var}(\bar{y}) = \frac{1}{n}$,
+\[
+    \text{Var}(\hat{\mu})
+    = \left(\frac{n}{n+\lambda}\right)^2 \text{Var}(\bar{y})
+    = \left(\frac{n}{n+\lambda}\right)^2 \frac{1}{n}
+    = \frac{n}{(n+\lambda)^2}.
+\]
+
+\paragraph{MSE:}
+\[
+    \mathrm{MSE}(\hat{\mu})
+    = \text{Bias}^2 + \text{Var}
+    = \frac{\lambda^2\mu^2 + n}{(n+\lambda)^2}.
+\]
+
+\textbf{Interpretation:}
+This estimator is biased toward~$0$,
+but its variance is smaller than that of the unbiased sample mean.
+It can achieve a lower mean squared error (MSE) when $n$ is small
+or when we expect $\mu$ to be close to~$0$.
