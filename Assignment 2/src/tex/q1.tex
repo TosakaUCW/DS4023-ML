@@ -1,0 +1,115 @@
+\section*{Question 1}
+
+Let $\mathcal{D}=\{X_1,\dots,X_n\}$ be i.i.d.\ samples from a Poisson distribution with rate parameter $\lambda$, i.e.\ $X_i\sim \mathrm{Poisson}(\lambda)$.
+
+Denote $S=\sum_{i=1}^{n}X_i$ and $\bar{X}=\frac{1}{n}\sum_{i=1}^{n}X_i$.
+
+\subsection*{(a)}
+
+The likelihood function is
+\[
+    L(\lambda)
+    =\prod_{i=1}^{n}P(X_i\mid\lambda)
+    =\prod_{i=1}^{n}\frac{\lambda^{X_i}e^{-\lambda}}{X_i!}
+    =\frac{\lambda^{S}e^{-n\lambda}}{\prod_{i=1}^{n}X_i!}.
+\]
+The log-likelihood is
+\[
+    \ell(\lambda)=S\log\lambda-n\lambda-\sum_{i=1}^{n}\log(X_i!).
+\]
+Taking the derivative w.r.t. $\lambda$ and setting it to zero gives
+\[
+    \frac{d\ell}{d\lambda}=\frac{S}{\lambda}-n=0
+    \quad\Longrightarrow\quad
+    \hat{\lambda}_{\mathrm{MLE}}=\frac{S}{n}=\bar{X}.
+\]
+Because $\mathbb{E}[X_i]=\lambda$, the estimator is unbiased:
+\[
+    \mathbb{E}[\hat{\lambda}_{\mathrm{MLE}}]
+    =\mathbb{E}[\bar{X}]
+    =\frac{1}{n}\sum_{i=1}^{n}\mathbb{E}[X_i]
+    =\lambda.
+\]
+
+
+\subsection*{(b)}
+
+Assume the prior $\lambda\sim \mathrm{Gamma}(\alpha,\beta)$ (rate parameterization) with pdf
+\[
+    p(\lambda\mid\alpha,\beta)
+    =\frac{\beta^{\alpha}}{\Gamma(\alpha)}\lambda^{\alpha-1}e^{-\beta\lambda},
+    \qquad \alpha>0,\ \beta>0.
+\]
+The posterior is proportional to the product of the prior and the likelihood:
+\[
+    p(\lambda\mid \mathcal{D})
+    \propto p(\lambda)L(\lambda)
+    \propto \lambda^{\alpha-1}e^{-\beta\lambda}\,\lambda^{S}e^{-n\lambda}
+    =\lambda^{(\alpha+S)-1}e^{-(\beta+n)\lambda}.
+\]
+Hence,
+\[
+    \boxed{\lambda\mid\mathcal{D}\sim \mathrm{Gamma}(\alpha+S,\ \beta+n).}
+\]
+
+\subsection*{(c)}
+
+From part (b), we know
+\[
+    \lambda \mid \mathcal{D} \sim \mathrm{Gamma}(\alpha', \beta'),
+    \quad \text{where } \alpha' = \alpha + S, \ \beta' = \beta + n.
+\]
+
+\[
+    p(\lambda \mid \alpha', \beta')
+    = \frac{(\beta')^{\alpha'}}{\Gamma(\alpha')}
+    \lambda^{\alpha'-1} e^{-\beta'\lambda},
+    \qquad \lambda > 0.
+\]
+
+To find the mode (i.e., the most probable value of $\lambda$), we maximize $p(\lambda \mid \alpha',\beta')$ with respect to $\lambda$.
+\[
+    \ell(\lambda) = \log p(\lambda \mid \alpha', \beta')
+    = (\alpha'-1)\log\lambda - \beta'\lambda + \text{constant}.
+\]
+\[
+    \frac{d\ell}{d\lambda}
+    = \frac{\alpha'-1}{\lambda} - \beta'.
+\]
+Setting the derivative to zero gives
+\[
+    \frac{\alpha'-1}{\lambda} - \beta' = 0
+    \quad \Longrightarrow \quad
+    \lambda_{\text{mode}} = \frac{\alpha'-1}{\beta'}.
+\]
+
+This stationary point is only valid if $\alpha' > 1$;
+otherwise, the pdf is monotonically decreasing and the mode occurs at the boundary $\lambda=0$.
+
+Therefore, the mode of the posterior distribution (which is the MAP estimator) is
+\[
+    \boxed{
+    \hat{\lambda}_{\mathrm{MAP}} =
+    \begin{cases}
+        \dfrac{\alpha' - 1}{\beta'}, & \alpha' > 1,   \\[10pt]
+        0,                           & \alpha' \le 1.
+    \end{cases}
+    }
+\]
+
+Since $\alpha' = \alpha + S$ and $\beta' = \beta + n$, we obtain
+\[
+    \boxed{
+    \hat{\lambda}_{\mathrm{MAP}} =
+    \begin{cases}
+        \dfrac{\alpha + S - 1}{\beta + n}, & \alpha + S > 1,   \\[10pt]
+        0,                                 & \alpha + S \le 1.
+    \end{cases}
+    }
+\]
+Equivalently, using the sample mean $\bar{X} = \dfrac{S}{n}$,
+\[
+    \hat{\lambda}_{\mathrm{MAP}} =
+    \dfrac{n\bar{X} + \alpha - 1}{\beta + n}
+    \qquad (\alpha + S > 1).
+\]
