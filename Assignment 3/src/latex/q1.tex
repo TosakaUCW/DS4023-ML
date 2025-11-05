@@ -1,0 +1,145 @@
+\section*{Question 1}
+
+\[
+    \text{Class } +1:~(1,2),~(2,3)
+    \qquad
+    \text{Class } -1:~(2,1),~(3,2)
+\]
+
+\subsection*{(1)}
+
+The separating hyperplane is
+\[
+    w^\top x + b = 0, \quad w \in \mathbb{R}^2,~ b \in \mathbb{R}.
+\]
+
+For the hard-margin SVM, the optimization problem is
+\[
+    \begin{aligned}
+         & \min_{w,b} \quad \frac{1}{2}\|w\|_2^2                           \\
+         & \text{s.t.} \quad y_i(w^\top x_i + b) \ge 1, \quad i=1,\dots,4.
+    \end{aligned}
+\]
+
+\subsection*{(2)}
+
+% Introduce Lagrange multipliers $\alpha_i \ge 0$ for each constraint.
+The Lagrangian is
+\[
+    \mathcal{L}(w,b,\alpha)
+    = \frac{1}{2}\|w\|_2^2
+    - \sum_{i=1}^4 \alpha_i\big(y_i(w^\top x_i + b) - 1\big).
+\]
+
+% Taking partial derivatives and setting them to zero gives the KKT conditions:
+The KKT conditions:
+\[
+    \frac{\partial \mathcal{L}}{\partial w} = 0
+    \Rightarrow
+    w = \sum_{i=1}^4 \alpha_i y_i x_i,
+\]
+\[
+    \frac{\partial \mathcal{L}}{\partial b} = 0
+    \Rightarrow
+    \sum_{i=1}^4 \alpha_i y_i = 0.
+\]
+
+Substitute these into $\mathcal{L}$ to obtain the dual optimization problem:
+
+\[
+    \boxed{
+
+
+        \begin{aligned}
+            \max_{\alpha \ge 0}\quad
+             & \sum_{i=1}^4 \alpha_i
+            - \frac{1}{2}\sum_{i=1}^4\sum_{j=1}^4 \alpha_i \alpha_j y_i y_j x_i^\top x_j, \\
+            \text{s.t.}\quad
+             & \sum_{i=1}^4 \alpha_i y_i = 0.
+        \end{aligned}
+
+    }
+\]
+
+% In matrix form:
+% \[
+%     \max_{\alpha} \quad \mathbf{1}^\top \alpha - \frac{1}{2}\alpha^\top Q\,\alpha,
+%     \quad
+%     \text{s.t. } y^\top \alpha = 0,\ \alpha \ge 0,
+% \]
+% where $Q_{ij} = y_i y_j\,x_i^\top x_j$.
+
+% The KKT conditions also imply
+% \[
+%     \alpha_i \ge 0,\quad
+%     y_i(w^\top x_i + b) - 1 \ge 0,\quad
+%     \alpha_i [y_i(w^\top x_i + b) - 1] = 0.
+% \]
+
+\subsection*{(3)}
+
+Assume all $\alpha_i = 0.5$ and that the point $(1,2)$ is a support vector.
+
+Then,
+\[
+    w = \sum_{i=1}^4 \alpha_i y_i x_i
+    = 0.5\big[(1,2) + (2,3) - (2,1) - (3,2)\big]
+    = 0.5\,(-2,2)
+    = (-1,1).
+\]
+
+For the support vector $(1,2)$ with $y=+1$, the KKT equality holds:
+\[
+    y_i(w^\top x_i + b) = 1
+    \Rightarrow
+    (-1,1)\cdot(1,2) + b = 1
+    \Rightarrow
+    (-1 + 2) + b = 1
+    \Rightarrow
+    b = 0.
+\]
+
+Therefore, the optimal separating hyperplane is
+
+\[
+    w^\top x + b = 0
+    \quad\Rightarrow\quad
+    (-1,1)\cdot(x_1,x_2) + 0 = 0
+    \quad\Rightarrow\quad
+    \boxed{
+        x_2 - x_1 = 0.
+    }
+\]
+
+% \subsection*{Verification}
+
+% For class $+1$:
+% \[
+%     (1,2): (-1,1)\cdot(1,2) = 1 \ge 1, \qquad
+%     (2,3): (-1,1)\cdot(2,3) = 1 \ge 1.
+% \]
+
+% For class $-1$:
+% \[
+%     (2,1): (-1,1)\cdot(2,1) = -1 \le -1, \qquad
+%     (3,2): (-1,1)\cdot(3,2) = -1 \le -1.
+% \]
+
+% All constraints are satisfied.
+
+% \subsection*{Final results}
+
+% \[
+%     w = (-1,\,1)^\top, \qquad b = 0,
+% \]
+% \[
+%     \text{Decision boundary: } w^\top x + b = 0 \;\Rightarrow\; x_2 - x_1 = 0,
+% \]
+% \[
+%     \text{Decision function: } f(x) = \operatorname{sign}(w^\top x + b) = \operatorname{sign}(x_2 - x_1).
+% \]
+
+% The margin width is
+% \[
+%     \frac{2}{\|w\|} = \frac{2}{\sqrt{(-1)^2 + 1^2}} = \frac{2}{\sqrt{2}} = \sqrt{2}.
+% \]
