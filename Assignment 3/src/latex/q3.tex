@@ -1,0 +1,117 @@
+\section*{Question 3}
+
+\[
+    x_1=(1,2),~y_1=+1;\quad
+    x_2=(2,3),~y_2=+1;\quad
+    x_3=(3,1),~y_3=-1;\quad
+    x_4=(4,3),~y_4=-1.
+\]
+Polynomial kernel: \(k(x_i,x_j)=(x_i^\top x_j + 1)^2\). Regularization \(C=1\).
+
+\subsection*{(1)}
+% Compute \(x_i^\top x_j\), then \(K_{ij}=(x_i^\top x_j+1)^2\).
+\[
+    \begin{aligned}
+        x_1^\top x_1 & =5,  & x_1^\top x_2 & =8,  & x_1^\top x_3 & =5,  & x_1^\top x_4 & =10, \\
+        x_2^\top x_2 & =13, & x_2^\top x_3 & =9,  & x_2^\top x_4 & =17,                       \\
+        x_3^\top x_3 & =10, & x_3^\top x_4 & =15,                                             \\
+        x_4^\top x_4 & =25. &              &      &
+    \end{aligned}
+\]
+% Thus
+\[
+    K=
+    \begin{pmatrix}
+        (5+1)^2  & (8+1)^2  & (5+1)^2  & (10+1)^2 \\
+        (8+1)^2  & (13+1)^2 & (9+1)^2  & (17+1)^2 \\
+        (5+1)^2  & (9+1)^2  & (10+1)^2 & (15+1)^2 \\
+        (10+1)^2 & (17+1)^2 & (15+1)^2 & (25+1)^2
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        36  & 81  & 36  & 121 \\
+        81  & 196 & 100 & 324 \\
+        36  & 100 & 121 & 256 \\
+        121 & 324 & 256 & 676
+    \end{pmatrix}.
+\]
+
+\subsection*{(2)}
+Using the soft-margin SVM dual with kernel,
+\[
+    \begin{aligned}
+        \max_{\alpha\in\mathbb{R}^4}\quad
+         & \sum_{i=1}^4 \alpha_i - \frac{1}{2}\sum_{i=1}^4\sum_{j=1}^4 \alpha_i\alpha_j y_i y_j K_{ij}, \\
+        \text{s.t.}\quad
+         & \sum_{i=1}^4 \alpha_i y_i = 0,\qquad 0 \le \alpha_i \le C(=1).
+    \end{aligned}
+\]
+At optimality, the decision function is
+\[
+    f(x) = \sum_{i=1}^4 \alpha_i^\star y_i\, k(x_i,x) + b^\star,
+    \quad
+    \hat{y}(x) = \operatorname{sign}\big(f(x)\big).
+\]
+
+\subsection*{(3)}
+Given
+\[
+    \alpha_1=0.0182,\quad \alpha_2=0.0068,\quad \alpha_3=0.0250,\quad \alpha_4=0,
+\]
+and \(x_3\) is a support vector with \(y_3=-1\).
+
+For any margin support vector \(x_s\) with \(0<\alpha_s<C\),
+\[
+    y_s\Big(\sum_{j=1}^4 \alpha_j y_j K_{js} + b\Big) = 1.
+\]
+Take \(s=3\):
+\[
+    -1\Big(\sum_{j=1}^4 \alpha_j y_j K_{j3} + b\Big)=1
+    \ \Rightarrow\
+    b = -1 - \sum_{j=1}^4 \alpha_j y_j K_{j3}.
+\]
+Compute the sum using the 3rd column of \(K\): \((36,100,121,256)^\top\).
+\[
+    \sum_{j=1}^4 \alpha_j y_j K_{j3}
+    = 0.0182\cdot(+1)\cdot 36
+    + 0.0068\cdot(+1)\cdot 100
+    + 0.0250\cdot(-1)\cdot 121
+    + 0\cdot(-1)\cdot 256
+    = -1.6898.
+\]
+Hence
+\[
+    \boxed{~b = -1 - (-1.6898) = 0.6898.~}
+\]
+
+\subsection*{(4)}
+Evaluate
+\[
+    f(x_5) = \sum_{i=1}^4 \alpha_i y_i\, k(x_i,x_5) + b.
+\]
+First compute \(k(x_i,x_5)=(x_i^\top x_5 + 1)^2\):
+\[
+    \begin{aligned}
+        x_1^\top x_5 & = 1\cdot 2 + 2\cdot 1 = 4 \Rightarrow k(x_1,x_5)=(4+1)^2=25,    \\
+        x_2^\top x_5 & = 2\cdot 2 + 3\cdot 1 = 7 \Rightarrow k(x_2,x_5)=(7+1)^2=64,    \\
+        x_3^\top x_5 & = 3\cdot 2 + 1\cdot 1 = 7 \Rightarrow k(x_3,x_5)=(7+1)^2=64,    \\
+        x_4^\top x_5 & = 4\cdot 2 + 3\cdot 1 = 11 \Rightarrow k(x_4,x_5)=(11+1)^2=144.
+    \end{aligned}
+\]
+Thus
+\[
+    \begin{aligned}
+        f(x_5)
+         & = 0.0182\cdot(+1)\cdot 25
+        + 0.0068\cdot(+1)\cdot 64
+        + 0.0250\cdot(-1)\cdot 64
+        + 0\cdot(-1)\cdot 144
+        + 0.6898                               \\
+         & = 0.455 + 0.4352 - 1.6 + 0 + 0.6898 \\
+         & = -0.0200\ (\text{approximately}).
+    \end{aligned}
+\]
+Therefore,
+\[
+    \boxed{~\hat{y}(x_5)=\operatorname{sign}(f(x_5)) = -1.~}
+\]
