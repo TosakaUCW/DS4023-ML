@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+
+\usepackage{pdfpages}
+
+% ========== 编码与字体 ==========
+\usepackage[T1]{fontenc}      % 字体编码
+\usepackage{lmodern}          % 更好的拉丁现代字体
+\usepackage{courier}          % 等宽字体（用于代码或公式中的固定宽度部分）
+
+% ========== 数学 ==========
+\usepackage{amsmath, amssymb, amsfonts} % 数学符号与字体支持
+\usepackage{amsthm}
+\usepackage{mathtools}                  % amsmath 的增强版
+
+% ========== 页面布局 ==========
+\usepackage[margin=1in]{geometry}  % 页面边距
+\usepackage{parskip}               % 段落间距更清晰（替代缩进）
+
+% ========== 图形与表格 ==========
+\usepackage{graphicx}      % 插图
+\usepackage{booktabs, array}  % 优雅的表格线
+\usepackage{caption}       % 图表标题优化
+\usepackage{svg}           % 支持 SVG 图形（需要 --shell-escape）
+
+% 可选：指定图片目录
+\graphicspath{{figures/}}
+
+% ========== TikZ 与绘图 ==========
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{
+  arrows.meta,
+  positioning,
+  fit,
+  shapes.multipart,
+  automata
+}
+% \tikzset{
+%   ->,
+%   >=stealth',
+%   shorten >=1pt,
+%   auto,
+%   node distance=3.8cm, % make edges a bit longer for labels
+%   semithick
+% }
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ========== 超链接（应放在最后） ==========
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  citecolor=black
+}
+
+% ========== 插入代码 ==========
+\usepackage{minted}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{orange},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  frame=single,
+  breaklines=true
+}
+
+% ========== 文档信息 ==========
+\title{ML Assignment 4}
+\author{Bohan YANG \\ Student ID: 2330016056}
+\date{\today}
+
+% ========== 正文 ==========
+\begin{document}
+
+\maketitle
+
+% 可选：自动生成目录
+% \tableofcontents
+% \newpage
+
+\input{q1}
+% \input{q2}
+% \input{q3}
+
+\end{document}
