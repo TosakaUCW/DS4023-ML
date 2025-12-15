@@ -1,0 +1,73 @@
+\section*{Question 4}
+
+\subsection*{Data matrix}
+\[
+    X=
+    \begin{pmatrix}
+        1 & 2 & 3 & 4 \\
+        5 & 5 & 6 & 7 \\
+        1 & 4 & 2 & 3 \\
+        5 & 3 & 2 & 1 \\
+        8 & 1 & 2 & 2
+    \end{pmatrix}\in\mathbb{R}^{5\times 4}.
+\]
+
+\subsection*{Derivation and procedure}
+\paragraph{(1) Centering.}
+Let column mean be $\bar{\bm{x}}=\frac{1}{n}\sum_{i=1}^n \bm{x}_i$.
+Centered data:
+\[
+    X_c = X - \bm{1}\bar{\bm{x}}^{\top}.
+\]
+
+\paragraph{(2) Covariance matrix.}
+\[
+    S=\frac{1}{n-1}X_c^\top X_c \in \mathbb{R}^{4\times 4}.
+\]
+
+\paragraph{(3) Eigen-decomposition.}
+Solve
+\[
+    S\bm{v}_j=\lambda_j \bm{v}_j,\qquad \lambda_1\ge \lambda_2\ge \lambda_3\ge \lambda_4.
+\]
+Take the top two eigenvectors:
+\[
+    W = [\bm{v}_1\ \bm{v}_2]\in\mathbb{R}^{4\times 2}.
+\]
+
+\paragraph{(4) Projection to 2D.}
+\[
+    Z = X_c W \in\mathbb{R}^{5\times 2}.
+\]
+
+\subsection*{Results}
+Top eigenvalues:
+\[
+    \lambda_1=10.6066305,\quad \lambda_2=7.90808697.
+\]
+Corresponding eigenvectors:
+\[
+    W=
+    \begin{pmatrix}
+        -0.69478464    & \ \ 0.69892736 \\
+        \ \ 0.34820806 & \ \ 0.17035429 \\
+        \ \ 0.32341225 & \ \ 0.47997101 \\
+        \ \ 0.53984254 & \ \ 0.50210337
+    \end{pmatrix}.
+\]
+2D embeddings $Z=X_cW$:
+\[
+    Z\approx
+    \begin{pmatrix}
+        \ \ 2.06005139 & -1.96587434   \\
+        \ \ 2.91530135 & \ \ 4.2871211 \\
+        \ \ 1.89321273 & -2.60724014   \\
+        -2.31381898    & -0.98609174   \\
+        -4.55474649    & 1.27208513
+    \end{pmatrix}.
+\]
+
+Explained variance ratio of the first two PCs:
+\[
+    \frac{\lambda_1+\lambda_2}{\sum_{j=1}^{4}\lambda_j}\approx 0.9350867.
+\]

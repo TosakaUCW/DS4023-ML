@@ -1,0 +1,77 @@
+\section*{Question 2}
+
+\subsection*{Model}
+For each trial $i$:
+\begin{itemize}
+    \item Toss coin $A$: $P(A=\text{H})=\pi$, $P(A=\text{T})=1-\pi$.
+    \item If $A=\text{H}$ choose coin $B$, else choose coin $C$.
+    \item Toss the chosen coin and observe $x_i\in\{0,1\}$ (H=1, T=0).
+\end{itemize}
+
+Define latent variable $z_i\in\{0,1\}$:
+\[
+    z_i=1 \Rightarrow \text{coin }B\text{ used},\qquad
+    z_i=0 \Rightarrow \text{coin }C\text{ used}.
+\]
+Parameters:
+\[
+    P(z_i=1)=\pi,\quad P(x_i=1\mid z_i=1)=p,\quad P(x_i=1\mid z_i=0)=q.
+\]
+
+Observed sequence ($n=10$):
+\[
+    x = (1,1,0,1,0,0,1,0,1,1).
+\]
+
+\subsection*{Incomplete-data likelihood}
+\[
+    P(x_i=1)=\pi p+(1-\pi)q,\qquad
+    P(x_i=0)=\pi(1-p)+(1-\pi)(1-q).
+\]
+Thus
+\[
+    L(\pi,p,q)=\prod_{i=1}^{n}\Big[\pi p^{x_i}(1-p)^{1-x_i}+(1-\pi)q^{x_i}(1-q)^{1-x_i}\Big].
+\]
+\subsection*{Complete-data log-likelihood}
+\[
+    \log P(X,Z)=\sum_{i=1}^{n}\Big(
+    z_i[\log\pi+x_i\log p+(1-x_i)\log(1-p)]
+    +(1-z_i)[\log(1-\pi)+x_i\log q+(1-x_i)\log(1-q)]
+    \Big).
+\]
+
+\subsection*{EM derivation}
+\paragraph{E-step}
+\[
+    \gamma_i := P(z_i=1\mid x_i,\theta^{(t)})
+    = \frac{\pi^{(t)}\,p^{(t)\,x_i}(1-p^{(t)})^{1-x_i}}
+    {\pi^{(t)}\,p^{(t)\,x_i}(1-p^{(t)})^{1-x_i}+(1-\pi^{(t)})\,q^{(t)\,x_i}(1-q^{(t)})^{1-x_i}}.
+\]
+
+\paragraph{M-step}
+Using $\mathbb{E}[z_i]=\gamma_i$:
+\[
+    \pi^{(t+1)}=\frac{1}{n}\sum_{i=1}^{n}\gamma_i,
+    \qquad
+    p^{(t+1)}=\frac{\sum_{i=1}^{n}\gamma_i x_i}{\sum_{i=1}^{n}\gamma_i},
+    \qquad
+    q^{(t+1)}=\frac{\sum_{i=1}^{n}(1-\gamma_i)x_i}{\sum_{i=1}^{n}(1-\gamma_i)}.
+\]
+
+\subsection*{Results}
+Initialize:
+\[
+    \pi^{(0)}=0.46,\quad p^{(0)}=0.55,\quad q^{(0)}=0.67.
+\]
+E-step responsibilities for each observation (rounded to 6 decimals):
+\[
+    \gamma \approx (0.411516,\,0.411516,\,0.537383,\,0.411516,\,0.537383,\,0.537383,\,0.411516,\,0.537383,\,0.411516,\,0.411516).
+\]
+M-step yields (and converges immediately for this dataset):
+\[
+    \boxed{
+        \hat{\pi}=0.4618628351,\quad
+        \hat{p}=0.5345950038,\quad
+        \hat{q}=0.6561346418.
+    }
+\]

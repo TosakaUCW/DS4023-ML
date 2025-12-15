@@ -1,0 +1,48 @@
+\section*{Question 3}
+
+\subsection*{Data}
+\[
+    x = (-67,-48,6,8,14,16,23,24,28,29,41,49,56,60,75).
+\]
+
+\subsection*{Model}
+A 2-component 1D GMM:
+\[
+    p(x)=\alpha_1\mathcal{N}(x\mid\mu_1,\sigma_1^2)+\alpha_2\mathcal{N}(x\mid\mu_2,\sigma_2^2),
+    \quad
+    \alpha_1+\alpha_2=1,\ \alpha_k\ge 0.
+\]
+\[
+    \mathcal{N}(x\mid\mu,\sigma^2)=\frac{1}{\sqrt{2\pi}\sigma}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+\]
+
+\subsection*{EM derivation}
+Introduce latent indicator $z_i\in\{1,2\}$.
+Define responsibility:
+\[
+    \gamma_{ik}=P(z_i=k\mid x_i,\theta^{(t)})
+    =\frac{\alpha_k^{(t)}\mathcal{N}(x_i\mid \mu_k^{(t)},\sigma_k^{2(t)})}
+    {\sum_{j=1}^2 \alpha_j^{(t)}\mathcal{N}(x_i\mid \mu_j^{(t)},\sigma_j^{2(t)})}.
+\]
+
+Let $N_k=\sum_{i=1}^n \gamma_{ik}$. M-step updates:
+\[
+    \alpha_k^{(t+1)}=\frac{N_k}{n},
+    \qquad
+    \mu_k^{(t+1)}=\frac{1}{N_k}\sum_{i=1}^n \gamma_{ik}x_i,
+\]
+\[
+    \sigma_k^{2(t+1)}=\frac{1}{N_k}\sum_{i=1}^n \gamma_{ik}(x_i-\mu_k^{(t+1)})^2,
+    \qquad
+    \sigma_k^{(t+1)}=\sqrt{\sigma_k^{2(t+1)}}.
+\]
+
+\subsection*{Results}
+
+\[
+    \boxed{
+        \begin{aligned}
+            \alpha_1 & = 0.8668277165,\quad \mu_1 = 32.9848875405,\quad \sigma_1 = 20.7233763208; \\
+            \alpha_2 & = 0.1331722835,\quad \mu_2 = -57.5110766992,\quad \sigma_2 = 9.4999935621.
+        \end{aligned}}
+\]
