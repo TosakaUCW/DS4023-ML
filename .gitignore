@@ -541,3 +541,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Large artifacts
+Assignment 4/docs/Assignment_CNN_RNN.zip
+*.zip
